@@ -4,231 +4,664 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>JOS — Jeffrey Operating System</title>
-<meta name="description" content="JOS is a personal cognitive operating system. It remembers the definitions, decisions, principles and identity that reality has validated over time.">
+<meta name="description" content="JOS is a personal cognitive operating system. It keeps the definitions, decisions, principles and identity that reality has validated over time, in a record you own. The model is just the CPU.">
 <meta property="og:title" content="JOS — Jeffrey Operating System">
-<meta property="og:description" content="A personal cognitive operating system. The LLM is the compute engine; identity lives in the record.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>䷎</text></svg>">
+<meta property="og:description" content="A personal cognitive operating system. The model is the CPU; the record is the self.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jeffreylan.com/">
+<meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11100d" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2316150f'/><g fill='%23d9a066'><rect x='22' y='17' width='24' height='6' rx='2'/><rect x='54' y='17' width='24' height='6' rx='2'/><rect x='22' y='29' width='24' height='6' rx='2'/><rect x='54' y='29' width='24' height='6' rx='2'/><rect x='22' y='41' width='24' height='6' rx='2'/><rect x='54' y='41' width='24' height='6' rx='2'/><rect x='22' y='53' width='56' height='6' rx='2'/><rect x='22' y='65' width='24' height='6' rx='2'/><rect x='54' y='65' width='24' height='6' rx='2'/><rect x='22' y='77' width='24' height='6' rx='2'/><rect x='54' y='77' width='24' height='6' rx='2'/></g></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f6f4ef;
-    --surface: #fbfaf7;
-    --ink: #1b1a17;
-    --muted: #6b675e;
-    --faint: #9a958a;
-    --line: #dcd7cc;
-    --accent: #8a5a2b;
-    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Noto Serif TC", "Songti TC", Georgia, serif;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC", Helvetica, Arial, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --bg: #faf8f4;
+    --bg-alt: #f3efe7;
+    --surface: #ffffff;
+    --ink: #16150f;
+    --ink-2: #3d3a33;
+    --muted: #6f6a60;
+    --faint: #a29c90;
+    --line: #e6e0d4;
+    --line-strong: #d4ccbc;
+    --accent: #9a5b26;
+    --accent-ink: #7c4618;
+    --accent-soft: #f4e8da;
+    --band: #16150f;
+    --band-ink: #f3efe7;
+    --band-muted: #a7a092;
+    --band-line: #2c2a24;
+    --shadow: 0 1px 2px rgba(22, 21, 15, .04), 0 8px 24px -8px rgba(22, 21, 15, .10);
+    --serif: "Instrument Serif", "Iowan Old Style", "Noto Serif TC", "Songti TC", Georgia, serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC", Helvetica, Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --wrap: 1120px;
+    --radius: 14px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #141311;
-      --surface: #1b1a17;
-      --ink: #ece8df;
-      --muted: #a7a196;
-      --faint: #757064;
-      --line: #2f2c27;
-      --accent: #d29a5f;
+      --bg: #11100d;
+      --bg-alt: #17150f;
+      --surface: #1b1914;
+      --ink: #efeae0;
+      --ink-2: #d5cfc3;
+      --muted: #a39d91;
+      --faint: #6f6a60;
+      --line: #2a2721;
+      --line-strong: #3a362e;
+      --accent: #d9a066;
+      --accent-ink: #e7b582;
+      --accent-soft: #2a2117;
+      --band: #0b0a08;
+      --band-ink: #efeae0;
+      --band-muted: #9a9387;
+      --band-line: #24221d;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -8px rgba(0, 0, 0, .5);
     }
   }
+
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font: 17px/1.65 var(--sans);
-    padding-inline: 20px;
+    font: 16px/1.65 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  main, footer { max-width: 760px; margin: 0 auto; }
-  a { color: inherit; text-decoration-color: var(--faint); text-underline-offset: 3px; }
-  a:hover { text-decoration-color: var(--accent); }
-
-  .hero { padding-block: 18vh 12vh; }
-  .glyph { font-size: 64px; line-height: 1; color: var(--accent); margin: 0 0 28px; }
-  h1 {
-    font: 400 clamp(44px, 9vw, 76px)/1 var(--serif);
-    letter-spacing: -0.02em;
-    margin: 0 0 14px;
-  }
-  .tagline { font: 400 clamp(20px, 3.2vw, 26px)/1.35 var(--serif); color: var(--muted); margin: 0 0 40px; }
-  .thesis { font-size: 19px; max-width: 34em; margin: 0 0 14px; }
-  .zh { color: var(--muted); font-size: 15px; letter-spacing: 0.02em; max-width: 38em; margin: 0; }
-
-  section { padding-block: 64px; border-top: 1px solid var(--line); }
-  .label {
+  a { color: inherit; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 24px; }
+  .eyebrow {
     font: 500 12px/1 var(--mono);
-    letter-spacing: 0.14em;
+    letter-spacing: .14em;
     text-transform: uppercase;
-    color: var(--faint);
-    margin: 0 0 22px;
+    color: var(--accent);
+    margin: 0 0 18px;
   }
-  h2 { font: 400 clamp(26px, 4.4vw, 34px)/1.2 var(--serif); margin: 0 0 20px; letter-spacing: -0.01em; }
-  p { margin: 0 0 16px; }
-  .lead { font-size: 19px; }
-
-  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 28px; }
-  .cell { background: var(--surface); padding: 22px 22px 18px; }
-  .cell h3 { font: 600 15px/1.35 var(--sans); margin: 0 0 8px; }
-  .cell p { color: var(--muted); font-size: 15px; margin: 0; }
-
-  .ladder { list-style: none; padding: 0; margin: 28px 0 0; counter-reset: rung; }
-  .ladder li {
-    display: grid;
-    grid-template-columns: 2.2em 8.5em 1fr;
-    gap: 14px;
-    align-items: baseline;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--line);
-    counter-increment: rung;
+  h1, h2, h3 { margin: 0; font-weight: 400; }
+  h2 {
+    font: 400 clamp(34px, 5vw, 52px)/1.08 var(--serif);
+    letter-spacing: -.015em;
+    margin-bottom: 18px;
   }
-  .ladder li::before { content: counter(rung, decimal-leading-zero); font: 12px var(--mono); color: var(--faint); }
-  .ladder b { font: 400 19px/1.3 var(--serif); }
-  .ladder span { color: var(--muted); font-size: 15px; }
-  .loops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
-  .loop { border: 1px solid var(--line); padding: 18px 20px; background: var(--surface); }
-  .loop h3 { font: 600 15px/1.3 var(--sans); margin: 0 0 6px; }
-  .loop code { font: 13px/1.6 var(--mono); color: var(--muted); }
+  .section-lead { color: var(--muted); font-size: 18px; max-width: 40em; margin: 0; }
+  section { padding-block: 112px; }
+  section[id] { scroll-margin-top: 72px; }
 
-  .steps { margin: 28px 0 0; padding: 0; list-style: none; }
-  .steps li { padding: 0 0 18px 28px; position: relative; }
-  .steps li::before { content: ""; position: absolute; left: 6px; top: 0.7em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-  .steps h3 { font: 600 16px/1.4 var(--sans); margin: 0 0 4px; }
-  .steps p { color: var(--muted); font-size: 15.5px; margin: 0; }
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 46px; padding-inline: 22px;
+    border-radius: 999px;
+    font: 500 15px/1 var(--sans);
+    text-decoration: none;
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--ink); color: var(--bg); }
+  .btn-ghost { border: 1px solid var(--line-strong); color: var(--ink); }
+  .btn-ghost:hover { border-color: var(--ink); }
+  .btn svg { width: 16px; height: 16px; }
 
-  .genesis { display: flex; gap: 22px; align-items: center; margin-top: 32px; padding: 22px; border: 1px solid var(--line); background: var(--surface); }
-  .genesis .g { font-size: 52px; line-height: 1; color: var(--accent); }
-  .genesis p { margin: 0; font-size: 15px; color: var(--muted); }
-  .genesis strong { color: var(--ink); font-weight: 600; }
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(160%) blur(12px);
+    -webkit-backdrop-filter: saturate(160%) blur(12px);
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled { border-bottom-color: var(--line); }
+  .nav .wrap { display: flex; align-items: center; height: 64px; gap: 32px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 600 16px/1 var(--sans); letter-spacing: .02em; }
+  .logo-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--ink); display: grid; place-items: center; }
+  .logo-mark svg { width: 16px; height: 16px; }
+  .nav-links { display: flex; gap: 28px; margin-left: auto; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .15s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav .btn { height: 38px; padding-inline: 16px; font-size: 14px; }
 
-  .status { list-style: none; padding: 0; margin: 24px 0 0; }
-  .status li { display: grid; grid-template-columns: 7.5em 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15.5px; }
-  .status .k { font: 12px/1.9 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+  /* Hero */
+  .hero { position: relative; padding-block: 96px 120px; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(ellipse 70% 60% at 70% 40%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 40%, #000 20%, transparent 75%);
+    opacity: .55; pointer-events: none;
+  }
+  .hero .wrap { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 64px; align-items: center; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 6px 14px 6px 8px; border-radius: 999px;
+    border: 1px solid var(--line-strong); background: var(--surface);
+    font-size: 13px; color: var(--ink-2); margin-bottom: 28px;
+  }
+  .pill b { font: 600 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); padding: 5px 8px; border-radius: 999px; }
+  .hero h1 {
+    font: 400 clamp(46px, 6.6vw, 82px)/1.0 var(--serif);
+    letter-spacing: -.025em;
+    margin-bottom: 26px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub { font-size: 19px; line-height: 1.6; color: var(--ink-2); max-width: 32em; margin: 0 0 14px; }
+  .hero-zh { font-size: 14.5px; color: var(--muted); letter-spacing: .03em; max-width: 36em; margin: 0 0 36px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
 
-  footer { padding-block: 56px 72px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+  .genesis-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+    box-shadow: var(--shadow); padding: 36px 36px 28px; max-width: 400px; justify-self: end; width: 100%;
+  }
+  .genesis-card .hex { display: grid; gap: 14px; margin: 8px auto 30px; width: min(220px, 100%); }
+  .hex .ln { display: flex; gap: 22%; height: 18px; }
+  .hex .ln span { flex: 1; border-radius: 3px; background: var(--ink); }
+  .hex .ln.yang span:last-child { display: none; }
+  .hex .ln { opacity: 0; transform: translateY(6px); animation: rise .6s ease forwards; }
+  .hex .ln:nth-child(6) { animation-delay: .15s; }
+  .hex .ln:nth-child(5) { animation-delay: .35s; }
+  .hex .ln:nth-child(4) { animation-delay: .55s; }
+  .hex .ln:nth-child(3) { animation-delay: .75s; }
+  .hex .ln:nth-child(2) { animation-delay: .95s; }
+  .hex .ln:nth-child(1) { animation-delay: 1.15s; }
+  .hex .ln.yang span { background: var(--accent); }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  .genesis-meta { border-top: 1px solid var(--line); padding-top: 18px; display: grid; gap: 6px; }
+  .genesis-meta .row { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; }
+  .genesis-meta .k { color: var(--faint); font: 500 11px/1.9 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+  .genesis-meta .v { color: var(--ink-2); text-align: right; }
+  .genesis-title { text-align: center; font: 400 26px/1.2 var(--serif); margin-bottom: 4px; }
+  .genesis-title small { display: block; font: 400 14px/1.4 var(--sans); color: var(--muted); margin-top: 4px; }
 
-  @media (max-width: 620px) {
-    body { font-size: 16px; }
-    .hero { padding-block: 12vh 8vh; }
-    .grid, .loops { grid-template-columns: 1fr; }
-    .ladder li { grid-template-columns: 2em 1fr; }
-    .ladder span { grid-column: 2; }
-    .status li { grid-template-columns: 1fr; gap: 2px; }
-    .genesis { flex-direction: column; align-items: flex-start; }
+  /* Thesis band */
+  .band { background: var(--band); color: var(--band-ink); }
+  .band .eyebrow { color: #d9a066; }
+  .band h2 { max-width: 18em; }
+  .band h2 em { font-style: italic; color: #d9a066; }
+  .thesis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 64px; border-top: 1px solid var(--band-line); }
+  .thesis-grid > div { padding: 32px 32px 0 0; }
+  .thesis-grid > div + div { padding-left: 32px; border-left: 1px solid var(--band-line); }
+  .thesis-grid .n { font: 500 12px/1 var(--mono); color: var(--band-muted); letter-spacing: .1em; margin-bottom: 18px; display: block; }
+  .thesis-grid h3 { font: 500 18px/1.35 var(--sans); margin-bottom: 10px; }
+  .thesis-grid p { color: var(--band-muted); margin: 0; font-size: 15.5px; }
+
+  /* Principles */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 56px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px 24px 24px; transition: border-color .2s, transform .2s, box-shadow .2s;
+  }
+  .card:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-ink); display: grid; place-items: center; margin-bottom: 22px; }
+  .icon svg { width: 20px; height: 20px; }
+  .card h3 { font: 600 16px/1.35 var(--sans); margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: 14.5px; margin: 0; }
+
+  /* Ontology */
+  .alt { background: var(--bg-alt); }
+  .loop-block { margin-top: 56px; }
+  .loop-block + .loop-block { margin-top: 28px; }
+  .loop-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+  .loop-head h3 { font: 600 15px/1 var(--sans); }
+  .loop-head span { color: var(--muted); font-size: 14px; }
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; counter-reset: none; }
+  .node {
+    position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 20px 18px;
+  }
+  .node:not(:last-child)::after {
+    content: ""; position: absolute; right: -11px; top: 50%; width: 8px; height: 8px;
+    border-top: 1.5px solid var(--faint); border-right: 1.5px solid var(--faint);
+    transform: translateY(-50%) rotate(45deg); z-index: 1;
+  }
+  .node .i { font: 500 11px/1 var(--mono); color: var(--faint); letter-spacing: .08em; }
+  .node h4 { font: 400 25px/1.15 var(--serif); margin: 10px 0 6px; }
+  .node p { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.5; }
+  .node.hinge { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .node.hinge .tag { position: absolute; top: 16px; right: 16px; font: 600 10.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); padding: 5px 7px; border-radius: 6px; }
+  .rules { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; }
+  .rules span { font: 500 13px/1 var(--mono); color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: 999px; padding: 10px 14px; background: var(--surface); }
+
+  /* Runtime */
+  .arch {
+    display: grid; align-items: center; margin-top: 56px;
+    grid-template-columns: 1fr 56px 1.15fr 56px 1fr;
+    grid-template-areas:
+      "timers ar1 core ar2 engine"
+      ".      .   ar3  .   .     "
+      ".      .   store .  .     ";
+  }
+  .a-timers { grid-area: timers; } .a-core { grid-area: core; } .a-engine { grid-area: engine; } .a-store { grid-area: store; }
+  .a-ar1 { grid-area: ar1; } .a-ar2 { grid-area: ar2; } .a-ar3 { grid-area: ar3; }
+  .conn { position: relative; background: var(--line-strong); justify-self: center; }
+  .conn::before, .conn::after { content: ""; position: absolute; width: 8px; height: 8px; border: 0 solid var(--line-strong); }
+  .conn-h { width: calc(100% - 12px); height: 2px; }
+  .conn-h.end::after { right: -1px; top: -4px; border-top-width: 2px; border-right-width: 2px; transform: rotate(45deg); }
+  .conn-h.start::before { left: -1px; top: -4px; border-bottom-width: 2px; border-left-width: 2px; transform: rotate(45deg); }
+  .conn-v { width: 2px; height: 40px; }
+  .conn-v.end::after { bottom: -1px; left: -4px; border-right-width: 2px; border-bottom-width: 2px; transform: rotate(45deg); }
+  .conn-v.start::before { top: -1px; left: -4px; border-left-width: 2px; border-top-width: 2px; transform: rotate(45deg); }
+  .arch-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 20px; box-shadow: var(--shadow); }
+  .arch-box .k { font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
+  .arch-box h3 { font: 400 26px/1.15 var(--serif); margin-bottom: 8px; }
+  .arch-box p { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.5; }
+  .arch-box ul { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+  .arch-box li { font-size: 13.5px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #3c9a5f; flex: none; }
+  .dot.plan { background: transparent; border: 1.5px solid var(--faint); }
+  .arch-box.core { border-color: var(--ink); }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 88px; }
+  .step .n { font: 400 44px/1 var(--serif); color: var(--accent); display: block; margin-bottom: 16px; }
+  .step h3 { font: 600 17px/1.35 var(--sans); margin-bottom: 8px; }
+  .step p { color: var(--muted); margin: 0; font-size: 15px; }
+
+  /* JAPP */
+  .japp { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+  .japp ul { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; }
+  .japp li { display: flex; gap: 12px; color: var(--ink-2); }
+  .japp li svg { width: 20px; height: 20px; color: var(--accent); flex: none; margin-top: 3px; }
+  .phone {
+    justify-self: center; width: 300px; max-width: 100%;
+    border-radius: 44px; padding: 12px; background: var(--ink);
+    box-shadow: 0 30px 60px -20px rgba(22, 21, 15, .35);
+  }
+  .screen { border-radius: 34px; background: var(--surface); padding: 22px 20px 26px; min-height: 540px; display: flex; flex-direction: column; gap: 14px; }
+  .notch { width: 92px; height: 24px; border-radius: 999px; background: var(--ink); margin: 0 auto 6px; }
+  .boot { font: 500 11.5px/1 var(--mono); color: #3c9a5f; letter-spacing: .04em; }
+  .date { font: 400 30px/1.1 var(--serif); }
+  .date small { display: block; font: 400 13px/1.4 var(--sans); color: var(--muted); margin-top: 4px; }
+  .entry { border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .entry .k { font: 500 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; display: block; }
+  .entry p { margin: 0; font-size: 14px; line-height: 1.5; }
+  .entry.jos { background: var(--accent-soft); border-color: transparent; }
+  .entry.jos .k { color: var(--accent-ink); }
+  .entry .cast { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .concept { font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); text-align: center; margin-top: 14px; }
+
+  /* Status */
+  .timeline { list-style: none; padding: 0; margin: 56px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+  .timeline::before { content: ""; position: absolute; left: 0; right: 0; top: 7px; height: 2px; background: var(--line); }
+  .timeline li { position: relative; padding-right: 24px; }
+  .timeline .mark { width: 16px; height: 16px; border-radius: 50%; background: var(--bg); border: 2px solid var(--line-strong); position: relative; z-index: 1; margin-bottom: 22px; }
+  .timeline .done .mark { background: var(--ink); border-color: var(--ink); }
+  .timeline .now .mark { border-color: var(--accent); box-shadow: 0 0 0 5px var(--accent-soft); }
+  .timeline .state { font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; display: block; }
+  .timeline .now .state { color: var(--accent-ink); }
+  .timeline h3 { font: 600 16px/1.35 var(--sans); margin-bottom: 6px; }
+  .timeline p { color: var(--muted); font-size: 14.5px; margin: 0; }
+
+  /* Founder */
+  .founder { display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; padding: 44px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
+  .person { display: flex; align-items: center; gap: 20px; }
+  .avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; font: 400 26px/1 var(--serif); flex: none; }
+  .person h3 { font: 400 30px/1.1 var(--serif); }
+  .person p { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
+
+  footer { border-top: 1px solid var(--line); padding-block: 36px 48px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 1000px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .flow { grid-template-columns: repeat(2, 1fr); }
+    .node:nth-child(2)::after { display: none; }
+    .arch {
+      grid-template-columns: 1fr 1fr; column-gap: 14px;
+      grid-template-areas: "timers timers" "ar1 ar1" "core core" "ar2 ar3" "engine store";
+      align-items: stretch;
+    }
+    .arch .conn-h { width: 2px; height: 36px; }
+    .arch .conn-h.end::after { right: auto; top: auto; bottom: -1px; left: -4px; border-top-width: 0; border-right-width: 2px; border-bottom-width: 2px; }
+    .arch .conn-h.start::before { top: -1px; left: -4px; border-bottom-width: 0; border-left-width: 2px; border-top-width: 2px; }
+    .arch .conn-v { height: 36px; }
+    .timeline { grid-template-columns: 1fr 1fr; row-gap: 40px; }
+    .timeline::before { display: none; }
+  }
+  @media (max-width: 820px) {
+    .nav-links { display: none; }
+    .nav .btn { margin-left: auto; }
+    section { padding-block: 80px; }
+    .hero { padding-block: 56px 80px; }
+    .hero .wrap { grid-template-columns: 1fr; gap: 48px; }
+    .genesis-card { justify-self: stretch; max-width: none; }
+    .thesis-grid { grid-template-columns: 1fr; }
+    .thesis-grid > div, .thesis-grid > div + div { padding: 28px 0 0; border-left: 0; }
+    .thesis-grid > div + div { border-top: 1px solid var(--band-line); margin-top: 28px; }
+    .steps { grid-template-columns: 1fr; gap: 36px; margin-top: 64px; }
+    .japp { grid-template-columns: 1fr; gap: 48px; }
+    .founder { padding: 28px; }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding-inline: 18px; }
+    .cards, .flow { grid-template-columns: 1fr; }
+    .node::after { display: none; }
+    .timeline { grid-template-columns: 1fr; }
+    .hero-sub { font-size: 17.5px; }
+    .btn { height: 44px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hex .ln { animation: none; opacity: 1; transform: none; }
+    .btn, .card { transition: none; }
   }
 </style>
 </head>
 <body>
+
+<header class="nav" id="top">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="JOS home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 16 16"><g fill="#d9a066"><rect x="1" y="1" width="6" height="1.4" rx=".4"/><rect x="9" y="1" width="6" height="1.4" rx=".4"/><rect x="1" y="3.6" width="6" height="1.4" rx=".4"/><rect x="9" y="3.6" width="6" height="1.4" rx=".4"/><rect x="1" y="6.2" width="6" height="1.4" rx=".4"/><rect x="9" y="6.2" width="6" height="1.4" rx=".4"/><rect x="1" y="8.8" width="14" height="1.4" rx=".4"/><rect x="1" y="11.4" width="6" height="1.4" rx=".4"/><rect x="9" y="11.4" width="6" height="1.4" rx=".4"/><rect x="1" y="14" width="6" height="1.4" rx=".4"/><rect x="9" y="14" width="6" height="1.4" rx=".4"/></g></svg>
+      </span>
+      JOS
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#thesis">Thesis</a>
+      <a href="#principles">Principles</a>
+      <a href="#ontology">Ontology</a>
+      <a href="#runtime">Runtime</a>
+      <a href="#japp">JAPP</a>
+      <a href="#status">Status</a>
+    </nav>
+    <a class="btn btn-primary" href="https://www.linkedin.com/in/jeffrey-lan-5a580694">Get in touch</a>
+  </div>
+</header>
+
 <main>
 
-  <header class="hero">
-    <p class="glyph" aria-hidden="true">䷎</p>
-    <h1>JOS</h1>
-    <p class="tagline">A personal cognitive operating system.</p>
-    <p class="thesis">JOS does not try to remember the world. It remembers the definitions, decisions, principles and identity that reality has validated over time — the ones that actually shape a person.</p>
-    <p class="zh" lang="zh-Hant">JOS 不試圖記住世界。JOS 試圖記住那些被現實長期驗證後，最終塑造了一個人的定義、決策、原則與身份。</p>
-  </header>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="pill"><b>Pre-launch</b> A personal cognitive operating system</span>
+        <h1>Remember what <em>made</em> you.</h1>
+        <p class="hero-sub">JOS keeps the definitions, decisions, principles and identity that reality has validated over time — in a record you own. The model is just the CPU.</p>
+        <p class="hero-zh" lang="zh-Hant">JOS 不試圖記住世界。JOS 試圖記住那些被現實長期驗證後，最終塑造了一個人的定義、決策、原則與身份。</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#thesis">
+            Read the thesis
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#ontology">See the ontology</a>
+        </div>
+      </div>
 
-  <section>
-    <p class="label">The question</p>
-    <h2>Not “how can AI remember more?” but “what is worth remembering?”</h2>
-    <p class="lead">Language models are stateless. Most attempts to fix this add memory: retrieval, vector stores, longer context. JOS starts from a different question — which definitions made me who I am today, and which of them still hold?</p>
-    <p>Whoever holds the power to define is the one who stays human. JOS is built to keep that power with the person, not the model.</p>
+      <aside class="genesis-card" aria-label="JOS genesis record">
+        <p class="eyebrow" style="text-align:center">Genesis record</p>
+        <div class="hex" role="img" aria-label="Hexagram 15, Qian (Modesty), unchanging: five broken lines with one solid line in the third position">
+          <div class="ln"><span></span><span></span></div>
+          <div class="ln"><span></span><span></span></div>
+          <div class="ln"><span></span><span></span></div>
+          <div class="ln yang"><span></span><span></span></div>
+          <div class="ln"><span></span><span></span></div>
+          <div class="ln"><span></span><span></span></div>
+        </div>
+        <div class="genesis-title">謙 · Modesty<small>Hexagram 15 · unchanging</small></div>
+        <div class="genesis-meta">
+          <div class="row"><span class="k">Cast</span><span class="v">2026-02-22 · 02:22</span></div>
+          <div class="row"><span class="k">Method</span><span class="v">Yarrow stalks, by hand</span></div>
+          <div class="row"><span class="k">Reading</span><span class="v">Capability held beneath humility</span></div>
+        </div>
+      </aside>
+    </div>
   </section>
 
-  <section>
-    <p class="label">Principles</p>
-    <h2>The model is the CPU. The record is the self.</h2>
-    <div class="grid">
-      <div class="cell">
-        <h3>The LLM is a compute engine</h3>
-        <p>Claude is the engine JOS runs on today. Any model can be swapped in; who JOS is does not change.</p>
-      </div>
-      <div class="cell">
-        <h3>Identity lives in the record</h3>
-        <p>Principles and decision history stay in a local, auditable, editable store — never in model weights.</p>
-      </div>
-      <div class="cell">
-        <h3>Context construction is the product</h3>
-        <p>Every call rebuilds context from the record. The value is deciding what deserves to enter it.</p>
-      </div>
-      <div class="cell">
-        <h3>A decision requires an artifact</h3>
-        <p>A decision is a commitment, proven by something shipped into the world — not a thought.</p>
+  <section class="band" id="thesis">
+    <div class="wrap">
+      <p class="eyebrow">The thesis</p>
+      <h2>Not “how can AI remember more?” but “<em>what is worth remembering?</em>”</h2>
+      <div class="thesis-grid">
+        <div>
+          <span class="n">01</span>
+          <h3>Models are stateless</h3>
+          <p>Every call starts from zero. Retrieval and memory layers try to fix this by storing more.</p>
+        </div>
+        <div>
+          <span class="n">02</span>
+          <h3>Memory is not identity</h3>
+          <p>A pile of past conversations is not a self. What shapes a person is a small set of definitions that keep surviving reality.</p>
+        </div>
+        <div>
+          <span class="n">03</span>
+          <h3>Definition is the power</h3>
+          <p>Whoever holds the power to define stays human. JOS keeps that power with the person, not the model.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section>
-    <p class="label">Ontology v1</p>
-    <h2>Eight entities, from fact to self.</h2>
-    <ol class="ladder">
-      <li><b>Observation</b><span>A fact. No interpretation allowed.</span></li>
-      <li><b>Inquiry</b><span>The question a fact raises — refined in a loop until it collapses into will.</span></li>
-      <li><b>Position</b><span>Where you are in life right now.</span></li>
-      <li><b>Energy</b><span>Your real capacity to act.</span></li>
-      <li><b>Decision</b><span>A commitment, with an artifact.</span></li>
-      <li><b>Pattern</b><span>What repeats across decisions.</span></li>
-      <li><b>Principle</b><span>A definition that keeps surviving reality.</span></li>
-      <li><b>Identity</b><span>The result, not the starting point.</span></li>
-    </ol>
-    <div class="loops">
-      <div class="loop">
-        <h3>Fast action loop</h3>
-        <code>Observation → Inquiry → Position → Energy</code>
-      </div>
-      <div class="loop">
-        <h3>Slow wisdom loop</h3>
-        <code>Decision → Pattern → Principle → Identity</code>
+  <section id="principles">
+    <div class="wrap">
+      <p class="eyebrow">Principles</p>
+      <h2>The model is the CPU.<br>The record is the self.</h2>
+      <p class="section-lead">Four commitments shape every part of the system.</p>
+      <div class="cards">
+        <article class="card">
+          <div class="icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="10" height="10" rx="2"/><path d="M8 2v3M12 2v3M8 15v3M12 15v3M2 8h3M2 12h3M15 8h3M15 12h3"/></svg></div>
+          <h3>The LLM is a compute engine</h3>
+          <p>Claude is the engine JOS runs on today. Any model can be swapped in; who JOS is does not change.</p>
+        </article>
+        <article class="card">
+          <div class="icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 2.5h7l3 3v12H5z"/><path d="M12 2.5v3h3M7.5 9.5h5M7.5 12.5h5M7.5 15h3"/></svg></div>
+          <h3>Identity lives in the record</h3>
+          <p>Principles and decision history stay in a local, auditable, editable store — never in model weights.</p>
+        </article>
+        <article class="card">
+          <div class="icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2.5 17.5 6 10 9.5 2.5 6z"/><path d="m2.5 10 7.5 3.5 7.5-3.5M2.5 14l7.5 3.5 7.5-3.5"/></svg></div>
+          <h3>Context construction is the product</h3>
+          <p>Every call rebuilds context from the record. The value is deciding what deserves to enter it.</p>
+        </article>
+        <article class="card">
+          <div class="icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7.5"/><path d="m6.8 10.2 2.2 2.2 4.4-4.6"/></svg></div>
+          <h3>A decision requires an artifact</h3>
+          <p>A decision is a commitment, proven by something shipped into the world — not a thought.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section>
-    <p class="label">How JOS runs</p>
-    <h2>An autonomous system that knows its place.</h2>
-    <ul class="steps">
-      <li>
-        <h3>Timers give JOS initiative</h3>
-        <p>JOS does not wait to be asked. Independent timers drive what it observes and when it considers speaking.</p>
-      </li>
-      <li>
-        <h3>Time itself is observed</h3>
-        <p>Every half hour JOS casts an I Ching hexagram using a simulated yarrow-stalk method. The cast is recorded as fact; any reading of it is kept separate, as interpretation.</p>
-      </li>
-      <li>
-        <h3>A voice that does not overstep</h3>
-        <p>JOS asks and reflects. It never decides for the person — the commitment, and its consequences, stay human.</p>
-      </li>
-    </ul>
-    <div class="genesis">
-      <div class="g" aria-hidden="true">䷎</div>
-      <p><strong>Genesis — 2026-02-22 02:22.</strong> JOS’s birth hexagram was cast by hand with yarrow stalks: Qian 謙, Modesty, unchanging. A mountain beneath the earth — capability held under humility. It is JOS’s starting position, not its identity.</p>
+  <section class="alt" id="ontology">
+    <div class="wrap">
+      <p class="eyebrow">Ontology v1</p>
+      <h2>Eight entities, from fact to self.</h2>
+      <p class="section-lead">Raw experience enters at the bottom and is compressed, step by step, into a self-model. Two loops run at different speeds; the decision is where they meet.</p>
+
+      <div class="loop-block">
+        <div class="loop-head"><h3>Fast action loop</h3><span>Days · everyday action</span></div>
+        <div class="flow">
+          <div class="node"><span class="i">01</span><h4>Observation</h4><p>A fact. No interpretation allowed.</p></div>
+          <div class="node"><span class="i">02</span><h4>Inquiry</h4><p>The question a fact raises, refined in a loop.</p></div>
+          <div class="node"><span class="i">03</span><h4>Position</h4><p>Where you are in life right now.</p></div>
+          <div class="node"><span class="i">04</span><h4>Energy</h4><p>Your real capacity to act.</p></div>
+        </div>
+      </div>
+
+      <div class="loop-block">
+        <div class="loop-head"><h3>Slow wisdom loop</h3><span>Months · cognitive evolution</span></div>
+        <div class="flow">
+          <div class="node hinge"><span class="tag">Core unit</span><span class="i">05</span><h4>Decision</h4><p>A commitment, with an artifact.</p></div>
+          <div class="node"><span class="i">06</span><h4>Pattern</h4><p>What repeats across decisions.</p></div>
+          <div class="node"><span class="i">07</span><h4>Principle</h4><p>A definition that keeps surviving reality.</p></div>
+          <div class="node"><span class="i">08</span><h4>Identity</h4><p>The result, not the starting point.</p></div>
+        </div>
+      </div>
+
+      <div class="rules" aria-label="Runtime philosophy">
+        <span>Observation precedes interpretation</span>
+        <span>Position precedes planning</span>
+        <span>Energy constrains action</span>
+        <span>Decision requires artifact</span>
+        <span>Principles emerge from trajectory</span>
+      </div>
     </div>
   </section>
 
-  <section>
-    <p class="label">First product</p>
-    <h2>JAPP — a diary that installs a JOS.</h2>
-    <p class="lead">It looks like a journal. Write the way you always have; JOS keeps time, observes, and reflects back what you have actually committed to. Apple Watch integration is planned, so the system can sense the body as well as the page.</p>
+  <section id="runtime">
+    <div class="wrap">
+      <p class="eyebrow">Runtime</p>
+      <h2>An autonomous system that knows its place.</h2>
+      <p class="section-lead">JOS does not wait to be asked. Timers give it initiative; the record gives it continuity; the model only computes.</p>
+
+      <div class="arch" aria-label="JOS runtime architecture">
+        <div class="arch-box a-timers">
+          <p class="k">Initiative</p>
+          <h3>Timers</h3>
+          <ul>
+            <li><span class="dot"></span>Observation · every 30 min</li>
+            <li><span class="dot plan"></span>More timers · planned</li>
+          </ul>
+        </div>
+        <div class="conn conn-h end a-ar1" aria-hidden="true"></div>
+        <div class="arch-box core a-core">
+          <p class="k">Core</p>
+          <h3>JOS Runtime</h3>
+          <p>Rebuilds context from the record on every call, then decides whether to observe, speak, or stay silent.</p>
+        </div>
+        <div class="conn conn-h start end a-ar2" aria-hidden="true"></div>
+        <div class="arch-box a-engine">
+          <p class="k">Compute</p>
+          <h3>Engine</h3>
+          <p>Claude today. Swappable by role — a fast model to decide, a stronger one to speak.</p>
+        </div>
+        <div class="conn conn-v start end a-ar3" aria-hidden="true"></div>
+        <div class="arch-box a-store">
+          <p class="k">Continuity</p>
+          <h3>Your record</h3>
+          <p>Local, append-only, human-readable. Genesis, observations, decisions, principles.</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <span class="n">i.</span>
+          <h3>Time itself is observed</h3>
+          <p>Every half hour JOS casts an I Ching hexagram with a simulated yarrow-stalk method. The cast is recorded as fact; any reading of it is kept separate, as interpretation.</p>
+        </div>
+        <div class="step">
+          <span class="n">ii.</span>
+          <h3>Silence by default</h3>
+          <p>Most moments do not deserve an interruption. JOS speaks only when an observation is worth stopping for — and almost never late at night.</p>
+        </div>
+        <div class="step">
+          <span class="n">iii.</span>
+          <h3>A voice that does not overstep</h3>
+          <p>JOS asks and reflects. It never decides for you; the commitment, and its consequences, stay human.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <p class="label">Status</p>
-    <h2>Pre-launch, and testing the core hypothesis first.</h2>
-    <ul class="status">
-      <li><span class="k">Ontology</span><span>v1 defined: eight entities, two loops.</span></li>
-      <li><span class="k">Runtime</span><span>Prototype running: half-hourly observation, local store.</span></li>
-      <li><span class="k">Validation</span><span>Experiment 001, pre-registered: does “energy constrains action” hold on real data — and can principles predict decisions as well as raw memory?</span></li>
-      <li><span class="k">Product</span><span>JAPP in design.</span></li>
-    </ul>
+  <section class="alt" id="japp">
+    <div class="wrap japp">
+      <div>
+        <p class="eyebrow">First product</p>
+        <h2>JAPP — a diary that installs a JOS.</h2>
+        <p class="section-lead">It looks like a journal. Write the way you always have; JOS keeps time, observes, and reflects back what you have actually committed to.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m5 10.5 3.2 3.2L15 7"/></svg>Starts with its own genesis: a cast at the moment you first open it.</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m5 10.5 3.2 3.2L15 7"/></svg>Separates what happened from what you think it means.</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m5 10.5 3.2 3.2L15 7"/></svg>Turns commitments into decisions with artifacts, and patterns into principles you can test.</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m5 10.5 3.2 3.2L15 7"/></svg>Apple Watch integration planned, so the system can sense the body as well as the page.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="phone" role="img" aria-label="Concept preview of the JAPP diary screen">
+          <div class="screen">
+            <div class="notch"></div>
+            <span class="boot">● JOS v2.1u online</span>
+            <div class="date">Wednesday<small>October 7 · 11:05</small></div>
+            <div class="entry">
+              <span class="k">Observation</span>
+              <p>Went back to bed at 10:40.</p>
+            </div>
+            <div class="entry jos">
+              <span class="k">JOS asks</span>
+              <p>What were you avoiding when you lay back down?</p>
+              <p class="cast">Prompted by today’s cast ䷊ 泰 — a reading, not a fact</p>
+            </div>
+            <div class="entry">
+              <span class="k">Decision</span>
+              <p>Ship the pricing copy today.</p>
+              <p class="cast">Artifact: pull request</p>
+            </div>
+          </div>
+        </div>
+        <p class="concept">Concept preview</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="status">
+    <div class="wrap">
+      <p class="eyebrow">Status</p>
+      <h2>Testing the core hypothesis first.</h2>
+      <p class="section-lead">The biggest risk is whether patterns really become principles worth trusting. We are validating that with real data before building more.</p>
+      <ol class="timeline">
+        <li class="done">
+          <div class="mark"></div>
+          <span class="state">Done</span>
+          <h3>Ontology v1</h3>
+          <p>Eight entities, two loops, five runtime rules.</p>
+        </li>
+        <li class="done">
+          <div class="mark"></div>
+          <span class="state">Running</span>
+          <h3>Runtime prototype</h3>
+          <p>Half-hourly observation into a local record.</p>
+        </li>
+        <li class="now">
+          <div class="mark"></div>
+          <span class="state">Now</span>
+          <h3>Experiment 001</h3>
+          <p>Pre-registered: does “energy constrains action” hold, and do principles predict decisions as well as raw memory?</p>
+        </li>
+        <li>
+          <div class="mark"></div>
+          <span class="state">Next</span>
+          <h3>JAPP</h3>
+          <p>The diary that installs a JOS.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section style="padding-top: 0">
+    <div class="wrap">
+      <div class="founder">
+        <div class="person">
+          <div class="avatar" aria-hidden="true">JL</div>
+          <div>
+            <h3>Jeffrey Lan</h3>
+            <p>Founder, Antigravity Technology · Taipei</p>
+          </div>
+        </div>
+        <a class="btn btn-primary" href="https://www.linkedin.com/in/jeffrey-lan-5a580694">
+          Connect on LinkedIn
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11 11 5M6 5h5v5"/></svg>
+        </a>
+      </div>
+    </div>
   </section>
 
 </main>
+
 <footer>
-  <span>Jeffrey Lan · Founder, Antigravity Technology · Taipei</span>
-  <a href="https://www.linkedin.com/in/jeffrey-lan-5a580694">LinkedIn</a>
+  <div class="wrap">
+    <span>© 2026 Antigravity Technology · Taipei</span>
+    <span>Built on Claude · <a href="#top">Back to top</a></span>
+  </div>
 </footer>
+
+<script>
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
 </body>
 </html>
